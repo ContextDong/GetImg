@@ -82,4 +82,5 @@ object GIntentUtil {
         intent.type = "image/*"
         return intent
     }
+
 }

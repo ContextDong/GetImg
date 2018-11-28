@@ -6,6 +6,7 @@ import android.net.Uri
 import android.support.v4.app.Fragment
 import com.cherry.getimg.model.*
 import com.cherry.getimg.utils.GIntentUtil
+import com.cherry.getimg.utils.GUtil
 
 /**
  * @author 董棉生(dongmiansheng@parkingwang.com)
@@ -80,8 +81,13 @@ class GetImgImpl : GetImage {
 
     override fun onPickFromCapture(outPutUri: Uri) {
         this.fromType = GImage.FromType.CAMERA
-
-        activity?.startActivityForResult(GIntentUtil.getCaptureIntent(outPutUri), GConstant.RC_PICK_PICTURE_FROM_CAPTURE)
+        if (activity != null) {
+            try {
+                GUtil.captureBySafely(activity, outPutUri, GConstant.RC_PICK_PICTURE_FROM_CAPTURE)
+            } catch (e: Exception) {
+                listener.getFail(null, activity.resources.getString(R.string.tip_enable_camera))
+            }
+        }
     }
 
     override fun onPickFromCaptureWithCrop(outPutUri: Uri, options: CropOptions) {
@@ -89,7 +95,9 @@ class GetImgImpl : GetImage {
         this.outputUri = outPutUri
         this.captureTempUri = outPutUri
         this.cropOptions = options
-        activity?.startActivityForResult(GIntentUtil.getCaptureIntent(outPutUri), GConstant.RC_PICK_PICTURE_FROM_CAPTURE_CROP)
+        if (activity != null) {
+            GUtil.captureBySafely(activity, outPutUri, GConstant.RC_PICK_PICTURE_FROM_CAPTURE_CROP)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
