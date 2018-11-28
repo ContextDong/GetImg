@@ -4,16 +4,17 @@
 ### 在工程的根目录下配置
 ```
 allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
+repositories {
+	...
+	maven { url 'https://jitpack.io' }
+	}
 }
 ```
 ### 在app Module中配置
 ```
 dependencies {
-	        implementation 'com.github.ContextDong:GetImg:Tag'
+	...
+	implementation 'com.github.ContextDong:GetImg:v1.0.0'
 }
 ````
 
