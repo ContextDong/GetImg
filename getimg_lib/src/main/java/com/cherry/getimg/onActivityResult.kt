@@ -1,7 +1,6 @@
 package com.cherry.getimg
 
 import android.app.Activity
-import android.app.ProgressDialog
 import android.graphics.Bitmap
 import android.net.Uri
 import com.cherry.getimg.ActivityResultController.handleCrop

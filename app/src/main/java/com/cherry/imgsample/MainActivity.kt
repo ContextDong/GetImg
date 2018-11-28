@@ -59,11 +59,11 @@ class MainActivity : AppCompatActivity(), GetImage.GetResultListener {
             }
 
             override fun onCompressSuccess(img: GImage) {
-                dialog?.hide()
+                dialog?.dismiss()
             }
 
             override fun onCompressFailed(img: GImage?, msg: String?) {
-                dialog?.hide()
+                dialog?.dismiss()
             }
         })
         getImage.correctImage(true)

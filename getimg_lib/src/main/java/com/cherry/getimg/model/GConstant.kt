@@ -1,11 +1,13 @@
 package com.cherry.getimg.model
 
+import android.content.Context
+
 /**
  * @author 董棉生(dongmiansheng@parkingwang.com)
  * @since 18-10-31
  */
 
-internal object GConstant{
+internal object GConstant {
     /**
      * request Code 裁剪照片
      */
@@ -34,4 +36,6 @@ internal object GConstant{
      * request Code 从相册选择照片并裁剪
      */
     const val RC_PICK_PICTURE_FROM_GALLERY_CROP = 1007
+
+    fun getFileProviderName(context: Context) = context.packageName + ".fileprovider"
 }

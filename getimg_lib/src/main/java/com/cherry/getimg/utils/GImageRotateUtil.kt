@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
+import android.util.Log
 
 import java.io.File
 import java.io.FileNotFoundException
@@ -26,8 +27,8 @@ object GImageRotateUtil {
     fun correctImage(context: Context, path: Uri?) {
 
         val imagePath = GUriParse.parseOwnUri(context, path)
-        val degree  = getBitmapDegree(imagePath)
-        if (degree  != 0) {
+        val degree = getBitmapDegree(imagePath)
+        if (degree != 0) {
             val bitmap = BitmapFactory.decodeFile(imagePath) ?: return
             val resultBitmap = rotateBitmapByDegree(bitmap, degree) ?: return
             try {

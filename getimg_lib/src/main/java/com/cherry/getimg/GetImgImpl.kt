@@ -3,10 +3,12 @@ package com.cherry.getimg
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.support.v4.app.Fragment
 import com.cherry.getimg.compress.CompressListener
 import com.cherry.getimg.model.*
 import com.cherry.getimg.utils.GIntentUtil
+import com.cherry.getimg.utils.GUriParse
 import com.cherry.getimg.utils.GUtil
 
 /**
@@ -82,9 +84,16 @@ class GetImgImpl : GetImage {
 
     override fun onPickFromCapture(outPutUri: Uri) {
         this.fromType = GImage.FromType.CAMERA
-        if (activity != null) {
+
+        this.outputUri = if (activity != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            GUriParse.convertFileUriToFileProviderUri(activity, outPutUri)
+        } else {
+            outputUri
+        }
+
+        if (activity != null && this.outputUri != null) {
             try {
-                GUtil.captureBySafely(activity, outPutUri, GConstant.RC_PICK_PICTURE_FROM_CAPTURE)
+                GUtil.captureBySafely(activity, this.outputUri!!, GConstant.RC_PICK_PICTURE_FROM_CAPTURE)
             } catch (e: Exception) {
                 listener.getFail(null, activity.resources.getString(R.string.tip_enable_camera))
             }
@@ -93,11 +102,16 @@ class GetImgImpl : GetImage {
 
     override fun onPickFromCaptureWithCrop(outPutUri: Uri, options: CropOptions) {
         this.fromType = GImage.FromType.CAMERA
-        this.outputUri = outPutUri
-        this.captureTempUri = outPutUri
+        this.outputUri = if (activity != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            GUriParse.convertFileUriToFileProviderUri(activity, outPutUri)
+        } else {
+            outPutUri
+        }
+
+        this.captureTempUri = this.outputUri
         this.cropOptions = options
-        if (activity != null) {
-            GUtil.captureBySafely(activity, outPutUri, GConstant.RC_PICK_PICTURE_FROM_CAPTURE_CROP)
+        if (activity != null && this.outputUri != null) {
+            GUtil.captureBySafely(activity, this.outputUri!!, GConstant.RC_PICK_PICTURE_FROM_CAPTURE_CROP)
         }
     }
 
