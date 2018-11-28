@@ -16,7 +16,7 @@ import java.io.File
 internal class CompressImageImpl(private val context: Context,
                                  private val config: CompressConfig,
                                  private val image: GImage?,
-                                 private val listener: CompressResultListener) : CompressImage {
+                                 private val listener: InnerCompressResultListener) : CompressImage {
 
 
     private val sendMsg = { isCompressSuccess: Boolean, imagePath: String?, msg: String? ->

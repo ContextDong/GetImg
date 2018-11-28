@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">GetImg</string>
+    <string name="tip_compress">正在压缩照片...</string>
 </resources>

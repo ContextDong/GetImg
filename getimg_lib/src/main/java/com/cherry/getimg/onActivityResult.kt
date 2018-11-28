@@ -12,7 +12,7 @@ import com.cherry.getimg.ActivityResultController.handleImgFromDocumentWithCrop
 import com.cherry.getimg.ActivityResultController.handleImgFromGallery
 import com.cherry.getimg.ActivityResultController.handleImgFromGalleryWithCrop
 import com.cherry.getimg.compress.CompressImageImpl
-import com.cherry.getimg.compress.CompressResultListener
+import com.cherry.getimg.compress.InnerCompressResultListener
 import com.cherry.getimg.exception.GException
 import com.cherry.getimg.model.*
 import com.cherry.getimg.utils.CropUtil
@@ -218,20 +218,17 @@ private object ActivityResultController {
 
         innerResult.run {
             if (compressConfig != null && exceptionMsg.gIsEmpty()) {
-                var progressDialog: ProgressDialog? = null
-                if (showCompressProgress) {
-                    progressDialog = showProgressDialog(activity, activity.resources.getString(R.string.tip_compress))
-                }
+                compressListener?.onStartCompress(gResult.image)
 
                 //处理压缩
-                CompressImageImpl(activity, compressConfig, gResult.image, object : CompressResultListener {
+                CompressImageImpl(activity, compressConfig, gResult.image, object : InnerCompressResultListener {
                     override fun onCompressFailed(img: GImage?, msg: String?) {
-                        progressDialog?.hide()
+                        compressListener?.onCompressSuccess(gResult.image)
                         handleCallback(img, compressConfig, listener, exceptionMsg)
                     }
 
                     override fun onCompressSuccess(img: GImage) {
-                        progressDialog?.hide()
+                        compressListener?.onCompressFailed(gResult.image, exceptionMsg)
                         handleCallback(img, compressConfig, listener, exceptionMsg)
                     }
                 }).compress()
@@ -261,21 +258,6 @@ private object ActivityResultController {
         if (img.fromType == GImage.FromType.CAMERA) {
             GImageFileUtil.delete(img.originPath)
             img.originPath = ""
-        }
-    }
-
-    fun showProgressDialog(activity: Activity?, progressTitle: String?): ProgressDialog? {
-        if (activity == null || activity.isFinishing) {
-            return null
-        }
-        var title = activity.resources.getString(R.string.tip_tips)
-        if (progressTitle.gIsEmpty()) {
-            title = progressTitle!!
-        }
-        return ProgressDialog(activity).apply {
-            setTitle(title)
-            setCancelable(false)
-            show()
         }
     }
 

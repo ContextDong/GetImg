@@ -7,7 +7,7 @@ import com.cherry.getimg.model.GImage
  * @since 18-11-1
  */
 
-internal interface CompressResultListener {
+internal interface InnerCompressResultListener {
 
     fun onCompressSuccess(img: GImage)
 

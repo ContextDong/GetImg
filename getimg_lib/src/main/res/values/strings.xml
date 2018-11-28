@@ -2,6 +2,4 @@
     <string name="app_name">getimg_lib</string>
     <string name="tip_type_not_image">选择的不是图片</string>
     <string name="tip_enable_camera">相机不可用</string>
-    <string name="tip_tips">提示</string>
-    <string name="tip_compress">正在压缩照片...</string>
 </resources>

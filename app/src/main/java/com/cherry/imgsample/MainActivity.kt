@@ -1,6 +1,7 @@
 package com.cherry.imgsample
 
 import android.Manifest
+import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -11,8 +12,10 @@ import android.util.Log
 import android.widget.Toast
 import com.cherry.getimg.GetImage
 import com.cherry.getimg.GetImgImpl
+import com.cherry.getimg.compress.CompressListener
 import com.cherry.getimg.model.CompressConfig
 import com.cherry.getimg.model.CropOptions
+import com.cherry.getimg.model.GImage
 import com.cherry.getimg.model.GResult
 import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.activity_main.*
@@ -49,7 +52,20 @@ class MainActivity : AppCompatActivity(), GetImage.GetResultListener {
             file.parentFile.mkdirs()
         }
 
-        getImage.onEnableCompress(getCompressConfig(), true)
+        var dialog: ProgressDialog? = null
+        getImage.onEnableCompress(getCompressConfig(), object : CompressListener {
+            override fun onStartCompress(img: GImage?) {
+                dialog = showProgressDialog()
+            }
+
+            override fun onCompressSuccess(img: GImage) {
+                dialog?.hide()
+            }
+
+            override fun onCompressFailed(img: GImage?, msg: String?) {
+                dialog?.hide()
+            }
+        })
         getImage.correctImage(true)
 
         gallery.setOnClickListener {
@@ -75,6 +91,7 @@ class MainActivity : AppCompatActivity(), GetImage.GetResultListener {
         captureCrop.setOnClickListener {
             getImage.onPickFromCaptureWithCrop(Uri.fromFile(file), getCropOptions())
         }
+
     }
 
     private fun getCompressConfig(): CompressConfig {
@@ -121,6 +138,17 @@ class MainActivity : AppCompatActivity(), GetImage.GetResultListener {
 
     override fun getCancel() {
         Toast.makeText(applicationContext, "取消了", Toast.LENGTH_SHORT).show()
+    }
+
+    fun showProgressDialog(): ProgressDialog? {
+        if (isFinishing) {
+            return null
+        }
+        return ProgressDialog(this).apply {
+            setTitle(resources.getString(R.string.tip_compress))
+            setCancelable(false)
+            show()
+        }
     }
 }
 

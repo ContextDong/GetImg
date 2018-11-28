@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.support.v4.app.Fragment
+import com.cherry.getimg.compress.CompressListener
 import com.cherry.getimg.model.*
 import com.cherry.getimg.utils.GIntentUtil
 import com.cherry.getimg.utils.GUtil
@@ -20,8 +21,8 @@ class GetImgImpl : GetImage {
     private var outputUri: Uri? = null
     private var cropOptions: CropOptions? = null
     private var compressConfig: CompressConfig? = null
+    private var compressListener: CompressListener? = null
     private var correctImage: Boolean = false
-    private var isShowCompressDialog = true
     private var fromType = GImage.FromType.GALLERY
     private var listener: GetImage.GetResultListener
 
@@ -102,16 +103,17 @@ class GetImgImpl : GetImage {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         activity?.onActivityForResult(GInnerResultHandler(activity, requestCode, resultCode, data, captureTempUri,
-                outputUri, cropOptions, compressConfig, fromType, isShowCompressDialog, correctImage, listener))
+                outputUri, cropOptions, compressConfig, fromType, compressListener, correctImage, listener))
     }
 
-    override fun onEnableCompress(config: CompressConfig, showCompressDialog: Boolean) {
+    override fun onEnableCompress(config: CompressConfig, compressListener: CompressListener?) {
         this.compressConfig = config
-        this.isShowCompressDialog = showCompressDialog
+        this.compressListener = compressListener
     }
 
     override fun correctImage(correctImage: Boolean) {
         this.correctImage = correctImage
     }
+
 
 }

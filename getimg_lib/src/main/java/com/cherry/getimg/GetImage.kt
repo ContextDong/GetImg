@@ -2,6 +2,7 @@ package com.cherry.getimg
 
 import android.content.Intent
 import android.net.Uri
+import com.cherry.getimg.compress.CompressListener
 import com.cherry.getimg.model.CompressConfig
 import com.cherry.getimg.model.CropOptions
 import com.cherry.getimg.model.GResult
@@ -68,16 +69,16 @@ interface GetImage {
      * 启用图片压缩
      *
      * @param config             压缩图片配置
-     * @param showCompressDialog 压缩时是否显示进度对话框
+     * @param compressListener 监听压缩回调
      */
-    fun onEnableCompress(config: CompressConfig, showCompressDialog: Boolean = true)
+    fun onEnableCompress(config: CompressConfig, compressListener: CompressListener? = null)
 
     /**
      * 是对拍的照片进行旋转角度纠正
      *
      * @param correctImage
      */
-    fun correctImage(correctImage:Boolean)
+    fun correctImage(correctImage: Boolean)
 
 
     interface GetResultListener {
